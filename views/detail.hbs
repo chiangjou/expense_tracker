@@ -1,5 +1,7 @@
-<p>{{ record.name }}</p>
-<a href="/records/{{ record._id }}/edit">edit</a>
-<a href="/">back</a>
 <form action="/records/{{ record._id }}?_method=DELETE" method="POST" style="display: inline;">
-  <button type="submit">delete</button>
+    <div class="input-group">
+      <input class="form-control" type="text" placeholder="name" name="name" value="{{ record.name }}" disabled>
+      <a class="btn btn-success" href="/records/{{ record._id }}/edit">edit</a>
+      <button class="btn btn-danger" type="submit">delete</button>
+    </div>
+  </form>
