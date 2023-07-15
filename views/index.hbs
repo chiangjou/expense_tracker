@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container index-container">
   <form action="/records/sort" id="sort-form" method="GET">
     <select class="form-select" aria-label="Default select example" name="sort" onchange="this.form.submit()">
       <option selected disabled value="">請選擇類別</option>
@@ -10,7 +10,7 @@
     </select>
   </form>
 
-  <div class="total-amount">
+  <div class="total-div">
     <div id="total-text"><span>總金額:</span></div>
     <div id="totalAmount">{{totalAmount}}</div>
   </div>
