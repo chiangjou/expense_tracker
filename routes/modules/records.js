@@ -40,10 +40,10 @@ router.get("/new", async (req, res) => {
     const Category = await Category.find().lean()
     if (Category.length === 0) {
       await Category.create(SEED_CATEGORY)
-      console.log("所有類別創建完成")
+      console.log("所有類別已創建完成。")
     }
-  } catch (err) {
-    console.log(err)
+  } catch (error) {
+    console.log(error)
   }
   res.render("new")
 })
@@ -63,23 +63,10 @@ router.post("/new", async (req, res) => {
       categoryId: categoryData._id
     })
     res.redirect("/")
-  } catch (err) {
-    console.log(err)
+  } catch (error) {
+    console.log(error)
   }
 })
-
-// router.get("/new", (req, res) => {
-//   return res.render("new")
-// })
-
-// router.post("/", (req, res) => {
-//   const userId = req.user._id
-//   const name = req.body.name
-
-//   return Record.create({ name, userId })
-//     .then(() => res.redirect("/"))
-//     .catch(error => console.log(error))
-// })
 
 // Read
 router.get("/:id", (req, res) => {
@@ -102,8 +89,8 @@ router.get("/:id/edit", async (req, res) => {
     const formatDate = moment.utc(record.date).format("YYYY-MM-DD")
 
     res.render("edit", { record, formatDate })
-  } catch (err) {
-    console.log(err)
+  } catch (error) {
+    console.log(error)
   }
 })
 
@@ -124,31 +111,10 @@ router.put("/:id/edit", async (req, res) => {
 
     await Record.updateOne({ _id, userId }, { $set: record })
     res.redirect("/")
-  } catch (err) {
-    console.log(err)
+  } catch (error) {
+    console.log(error)
   }
 })
-
-// router.get("/:id/edit", (req, res) => {
-//   const userId = req.user._id
-//   const _id = req.params.id
-
-//   return Record.findOne({ _id, userId })
-//     .lean()
-//     .then((record) => res.render("edit", { record }))
-//     .catch(error => console.log(error))
-// })
-
-// router.put("/:id", (req, res) => {
-//   const userId = req.user._id
-//   const _id = req.params.id
-
-//   return Record.findByIdAndUpdate({ _id, userId }, req.body)
-//     .then(() => res.redirect(`/records/${_id}`))
-//     .catch(error => console.log(error))
-// })
-
-
 
 // Delete
 router.delete("/:id", async (req, res) => {
@@ -158,18 +124,9 @@ router.delete("/:id", async (req, res) => {
   try {
     await Record.findByIdAndDelete({ _id, userId })
     res.redirect("/")
-  } catch (err) {
-    console.log(err)
+  } catch (error) {
+    console.log(error)
   }
 })
-
-// router.delete("/:id", (req, res) => {
-//   const userId = req.user._id
-//   const _id = req.params.id
-
-//   return Record.findByIdAndDelete({ _id, userId })
-//     .then(() => res.redirect("/"))
-//     .catch(error => console.log(error))
-// })
 
 module.exports = router
