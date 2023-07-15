@@ -1,8 +1,49 @@
 // 使用者種子資料
-
+const SEED_USER = [{
+  name: '廣志',
+  email: 'example1@gmail.com',
+  password: '12345678'
+},
+{
+  name: '小新',
+  email: 'example2@gmail.com',
+  password: '87654321'
+}
+]
 
 // 支出種子資料
-
+const SEED_RECORD = [
+  {
+    name: '午餐',
+    date: '2023.7.10',
+    amount: 60,
+    category: '餐飲食品'
+  },
+  {
+    name: "晚餐",
+    date: '2023.7.15',
+    amount: 60,
+    category: '餐飲食品'
+  },
+  {
+    name: "捷運",
+    date: '2023.7.10',
+    amount: 120,
+    category: '交通出行'
+  },
+  {
+    name: "租金",
+    date: '2023.7.05',
+    amount: 25000,
+    category: '家居物業'
+  },
+  {
+    name: "電影: 驚奇隊長",
+    date: '2023.6.23',
+    amount: 220,
+    category: '休閒娛樂'
+  }
+]
 
 // 類別種子資料
 const SEED_CATEGORY = [
@@ -28,4 +69,4 @@ const SEED_CATEGORY = [
   }
 ]
 
-module.exports = { SEED_CATEGORY }
+module.exports = { SEED_USER, SEED_RECORD, SEED_CATEGORY }
