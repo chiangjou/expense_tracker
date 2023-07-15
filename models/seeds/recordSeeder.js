@@ -1,8 +1,8 @@
-const mongoose = require('mongoose')
-const Record = require('../record')
+const mongoose = require("mongoose")
+const Record = require("../record")
 
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config()
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config()
 }
 
 mongoose.connect(process.env.MONGODB_URI, { 
@@ -10,13 +10,13 @@ mongoose.connect(process.env.MONGODB_URI, {
   useUnifiedTopology: true })
 
 const db = mongoose.connection
-db.on('error', () => {
-  console.log('mongodb error!')
+db.on("error", () => {
+  console.log("mongodb error!")
 })
-db.once('open', () => {
-  console.log('mongodb connected!')
+db.once("open", () => {
+  console.log("mongodb connected!")
   for (let i = 0; i < 10; i++) {
     Record.create({ name: `name-${i}` })
   }
-  console.log('done')
+  console.log("done")
 })
