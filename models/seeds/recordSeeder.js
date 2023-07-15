@@ -43,11 +43,11 @@ db.once("open", async () => {
             });
           })
         )
-        console.log("所有使用者與記帳資料創建完成");
+        console.log("所有使用者與記帳資料已創建完成。");
         process.exit();
       })
     )
-  } catch (err) {
-    console.log(err);
+  } catch (error) {
+    console.log(error);
   }
 })
