@@ -4,6 +4,7 @@ const exphbs = require("express-handlebars")
 const bodyParser = require("body-parser")
 
 const Record = require("./models/record")
+const record = require("./models/record")
 
 // 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== "production") {
@@ -40,14 +41,40 @@ app.get("/", (req,res) => {
 })
 
 // Create
-app.get("/records/new", (req, res) => {
-  return res.render("new")
-})
-
 app.post("/records", (req, res) => {
   const name = req.body.name
   return Record.create({ name })
     .then(() => res.redirect("/"))
+    .catch(error => console.log(error))
+})
+
+// Read
+app.get("/records/:id", (req, res) => {
+  const id = req.params.id
+  return Record.findById(id)
+    .lean()
+    .then((record) => res.render("detail", { record }))
+    .catch(error => console.log(error))
+})
+
+// Update
+app.get("/records/:id/edit", (req, res) => {
+  const id = req.params.id
+  return Record.findById(id)
+    .lean()
+    .then((record) => res.render("edit", { record }))
+    .catch(error => console.log(error))
+})
+
+app.post("/records/:id/edit", (req, res) => {
+  const id = req.params.id
+  const name = req.body.name
+  return Record.findById(id)
+    .then(record => {
+      record.name = name
+      return record.save()
+    })
+    .then(() => res.redirect(`/records/${id}`))
     .catch(error => console.log(error))
 })
 

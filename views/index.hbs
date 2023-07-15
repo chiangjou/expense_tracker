@@ -3,6 +3,8 @@
   {{#each records}}
   <li>
     {{this.name}}
+    <a href="./records/{{ this._id }}">detail</a>
+    <a href="./records/{{ this._id }}/edit">edit</a>
   </li>
   {{/each}}
 </ul>
