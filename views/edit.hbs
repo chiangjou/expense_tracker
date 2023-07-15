@@ -1,6 +1,64 @@
-<form action="/records/{{ record._id }}?_method=PUT" method="POST" style="display: inline;">
-  <div class="input-group">
-    <input class="form-control" type="text" placeholder="name" name="name" value="{{ record.name }}">
-    <button class="btn btn-success" type="submit">Save</button>
-  </div>
-</form>
+<div class="edit-container">
+  <form action="/records/edit/{{record._id}}?_method=PUT" method="POST" class="need-validate-form" novalidate>
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">
+            <h2>請修改你的支出</h2>
+          </th>
+        </tr>
+        <tr>
+          <td>*必填欄位</td>
+        </tr>
+      </thead>
+      <tbody>
+
+        <tr class="mt-3">
+          <td>
+            <label for="name" class="form-label">名稱* :</label>
+          </td>
+          <td>
+            <input type="text" id="name" name="name" class="form-control" value="{{record.name}}" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="date" class="form-label">日期* :</label>
+          </td>
+          <td>
+            <input type="date" id="date" name="date" class="form-control" value="{{formatDate}}" required>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="category" class="form-label">類別* :</label>
+          </td>
+          <td>
+            <select class="form-select" aria-label="Default select example" name="category" id="category" required>
+              <option selected>{{record.categoryId.name}}</option>
+              <option value="家居物業">家居物業</option>
+              <option value="交通出行">交通出行</option>
+              <option value="休閒娛樂">休閒娛樂</option>
+              <option value="餐飲食品">餐飲食品</option>
+              <option value="其他">其他</option>
+            </select>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label for="amount" class="form-label">金額* :</label>
+          </td>
+          <td>
+            <input type="text" id="amount" name="amount" class="form-control" value="{{record.amount}}" required>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <button type="submit" class="btn btn-primary btn-block" id="send-button">送出</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </form>
+</div>
