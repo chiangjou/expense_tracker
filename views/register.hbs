@@ -1,30 +1,55 @@
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
-    <div class="card card-body">
-      <h1 class="text-center mt-3">Register</h1>
+    <div class="card card-body text-dark bg-light">
+      <h3 class="text-center mt-2 mb-4">註冊</h3>
+
+      {{!-- flash message --}}
       {{> message}}
+
       <form action="/users/register" method="POST">
-        <div class="mb-3">
-          <label for="name" class="mb-2">Name</label>
-          <input type="text" id="name" name="name" class="form-control" placeholder="Enter Name" value="{{ name }}">
+
+        <div class="mb-4">
+          <div class="mb-3">
+            <label for="name" class="mb-2">姓名 <span class="text-danger">*</span></label>
+            <input type="text" id="name" name="name" class="form-control" placeholder="請輸入姓名 ..." value="{{ name }}"
+              required />
+          </div>
+
+          <div class="mb-3">
+            <label for="email" class="mb-2">Email 信箱 <span class="text-danger">*</span></label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="請輸入 Email ..."
+              value="{{ email }}" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="mb-2">密碼 <span class="text-danger">*</span></label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="請輸入密碼 ..."
+              value="{{ password }}" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="confirmPassword" class="mb-2">確認密碼 <span class="text-danger">*</span></label>
+            <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
+              placeholder="請再次輸入密碼 ..." value="{{ confirmPassword }}" required />
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="email" class="mb-2">Email</label>
-          <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email" value="{{ email }}">
+
+        <div class="d-grid gap-2 mt-3">
+          <button type="submit" class="btn btn-outline-primary btn-block">註冊</button>
         </div>
-        <div class="mb-3">
-          <label for="password" class="mb-2">Password</label>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password" value="{{ password }}">
+
+        <div class="line" style="height: 60px; line-height: 80px; text-align: center; font-size: 16px;">
+          <span class="line" style="display: inline-block; width: 100px; border-top: 2px solid #ccc"></span>
+          <span class="text" style="color: #686868; vertical-align: middle"><small>或是</small></span>
+          <span class="line" style="display: inline-block; width: 100px; border-top: 2px solid #ccc"></span>
         </div>
-        <div class="mb-3">
-          <label for="confirmPassword" class="mb-2">Confirm Password</label>
-          <input type="password" id="confirmPassword" name="confirmPassword" class="form-control"
-            placeholder="Confirm Password" value="{{ confirmPassword }}">
-        </div>
-        <button type="submit" class="btn btn-primary btn-block">Register</button>
+
+        <a href="/auth/facebook" class="btn btn-outline-secondary btn-sm mt-4"><i class="fa-brands fa-facebook"></i>
+          Facebook</a>
       </form>
-      <p class="lead mt-4">
-        Have An Account? <a href="/users/login">Login</a>
+
+      <p class="mt-5">
+        已經有帳號？ <a href="/users/login">登入</a>
       </p>
     </div>
   </div>
