@@ -36,6 +36,7 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.get("/", (req,res) => {
   Record.find()
     .lean()
+    .sort({ _id: "asc" })   // 根據 _id 升冪排序
     .then(records => res.render("index", { records }))
     .catch(error => console.error(error))
 })
