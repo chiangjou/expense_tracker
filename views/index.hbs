@@ -1,22 +1,50 @@
-<a href="/records/new" class="btn btn-primary mb-3">Create</a>
+<div class="container">
+  <form action="/records/sort" id="sort-form" method="GET">
+    <select class="form-select" aria-label="Default select example" name="sort" onchange="this.form.submit()">
+      <option selected disabled value="">請選擇類別</option>
+      <option value="家居物業">家居物業</option>
+      <option value="交通出行">交通出行</option>
+      <option value="休閒娛樂">休閒娛樂</option>
+      <option value="餐飲食品">餐飲食品</option>
+      <option value="其他">其他</option>
+    </select>
+  </form>
 
-<ul class="list-group">
-  {{#each records}}
-  <li class="list-group-item">
-    <div class="row">
-      <div class="col-auto me-auto">
-        <h4 style="display: inline; vertical-align: middle;">
-          {{ this.name }}
-        </h4>
-      </div>
-      <div class="col-auto">
-        <a class="btn btn-secondary" href="./records/{{ this._id }}">detail</a>
-        <a class="btn btn-success" href="./records/{{ this._id }}/edit">edit</a>
-        <form action="./records/{{ this._id }}?_method=DELETE" method="POST" style="display: inline;">
-          <button class="btn btn-danger" type="submit">delete</button>
+  <div class="total-amount">
+    <div id="total-text"><span>總金額:</span></div>
+    <div id="totalAmount">{{totalAmount}}</div>
+  </div>
+
+  <table>
+    {{#each records}}
+    <tr>
+      <td id="icon">
+        <i class="{{this.icon}}"></i>
+      </td>
+      <td id="name">{{this.name}}
+        <p id="date">{{this.date}}</p>
+      </td>
+      <td></td>
+      <td></td>
+      <td></td>
+      <td id="amount">{{this.amount}}</td>
+      <td></td>
+      <td class="button-td">
+        <a href="/records/edit/{{this._id}}" class="btn btn-success" id="edit-button">修改</a>
+      </td>
+      <td class="button-td">
+        <form action="/records/delete/{{this._id}}?_method=DELETE" method="POST" class="ms-3">
+          <button type="submit" class="btn btn-danger" id="delete">刪除</button>
         </form>
-      </div>
-    </div>
-  </li>
-  {{/each}}
-</ul>
+      </td>
+    </tr>
+    {{/each}}
+    <tr>
+      <td></td>
+      <td></td>
+      <td colspan="4">
+        <a class="btn btn-primary mt-5" href="/records/new" id="add-button">新增支出</a>
+      </td>
+    </tr>
+  </table>
+</div>
