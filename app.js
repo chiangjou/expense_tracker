@@ -4,6 +4,7 @@ const bodyParser = require("body-parser")
 const methodOverride = require("method-override") 
 const session = require("express-session")
 const flash = require("connect-flash")
+const bcrypt = require("bcryptjs") 
 
 // 僅在非正式環境時, 使用 dotenv
 if (process.env.NODE_ENV !== "production") {

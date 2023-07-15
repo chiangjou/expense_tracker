@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const User = require("../../models/user")
 const passport = require("passport")
+const bcrypt = require("bcryptjs")
 
 // Login
 router.get("/login", (req, res) => {
@@ -43,7 +44,7 @@ router.post("/register", (req, res) => {
     // 如果已經註冊：退回原本畫面
     if (user) {
       errors.push({ message: "這個 Email 已經註冊過了。" })
-      return res.render("register", {
+      res.render("register", {
         errors,
         name,
         email,
@@ -51,11 +52,14 @@ router.post("/register", (req, res) => {
         confirmPassword
       })
     }
-    return User.create({
-      name,
-      email,
-      password
-    })
+    return bcrypt
+      .genSalt(10)
+      .then(salt => bcrypt.hash(password, salt))
+      .then(hash => User.create({
+        name,
+        email,
+        password: hash
+      }))
       .then(() => res.redirect("/"))
       .catch(error => console.log(error))
   })
