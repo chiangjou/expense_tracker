@@ -1,23 +1,42 @@
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
     <div class="card card-body">
-      <h1 class="text-center mt-3">Login</h1>
+      <h4 class="text-center mt-2 mb-4">登入</h4>
+
+      {{!-- falsh message --}}
       {{> message}}
+
       <form action="/users/login" method="POST">
-        <div class="mb-3">
-          <label for="email" class="mb-2">Email</label>
-          <input type="email" id="email" name="email" class="form-control" placeholder="Enter Email">
+
+        <div class="mb-4">
+          <div class="mb-3">
+            <label for="email" class="mb-2">Email 信箱</label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="請輸入 Email ..." value="{{ email }}" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="mb-2">密碼</label>
+            <input type="password" id="password" name="password" class="form-control" placeholder="請輸入密碼 ..." value="{{ password }}" />
+          </div>
         </div>
-        <div class="mb-3">
-          <label for="password" class="mb-2">Password</label>
-          <input type="password" id="password" name="password" class="form-control" placeholder="Enter Password">
+
+        <div class="d-grid gap-2 mt-3">
+          <button type="submit" class="btn btn-outline-primary btn-block">登入</button>
         </div>
-        <button type="submit" class="btn btn-primary btn-block">Login</button>
-        <a href="/auth/facebook" class="btn btn-info btn-block">Facebook Login</a>
+
+        <div class="line" style="height: 60px; line-height: 80px; text-align: center; font-size: 16px;">
+          <span class="line" style="display: inline-block; width: 100px; border-top: 2px solid #ccc"></span>
+          <span class="text" style="color: #686868; vertical-align: middle">或是</span>
+          <span class="line" style="display: inline-block; width: 100px; border-top: 2px solid #ccc"></span>
+        </div>
+
+        <a href="/auth/facebook" class="btn btn-outline-secondary btn-sm mt-4"><i class="fa-brands fa-facebook"></i> Facebook</a>
       </form>
-      <p class="lead mt-4">
-        No Account? <a href="/users/register">Register</a>
+
+      <p class="mt-5">
+        還沒有帳號？ <a href="/users/register">建立新帳號</a>
       </p>
+
     </div>
   </div>
 </div>

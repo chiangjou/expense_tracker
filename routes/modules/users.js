@@ -6,11 +6,20 @@ const bcrypt = require("bcryptjs")
 
 // Login
 router.get("/login", (req, res) => {
-  res.render("login")
+  const userInput = req.session.userInput || {}
+  delete req.session.userInput
+
+  res.render("login", { email: userInput.email, password: userInput.password })
 })
 
 // 加入 middleware，驗證 request 登入狀態
-router.post("/login", passport.authenticate("local", {
+router.post("/login", (req, res, next) => {
+  const email = req.body.email
+  const password = req.body.password
+
+  req.session.userInput = { email, password }
+  next()
+}, passport.authenticate("local", {
   successRedirect: "/",
   failureRedirect: "/users/login"
 }))
