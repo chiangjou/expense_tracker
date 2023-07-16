@@ -2,35 +2,45 @@ const express = require("express")
 const router = express.Router()
 const Record = require("../../models/record")
 const Category = require("../../models/category")
-const moment = require("moment")
-const { SEED_CATEGORY } = require("../../models/seedsData")
 
-// Sort
-router.get("/sort", async (req, res) => {
+// Filter
+router.get("/filter", async (req, res) => {
+  const categories = await Category.find().lean()
+
+  const inputCategory = req.query.category ? req.query.category : { $ne: '' }
+  const inputDate = req.query.month ? req.query.month : { $ne: '' }
+  const categoryData = {}
   const userId = req.user._id
-  try {
-    const sort = req.query.sort
+  const filteredData = await Record.aggregate([
+    { $project: { userId: 1, name: 1, amount: 1, category: 1, date: { $substr: ["$date", 0, 7] }, day: { $substr: ["$date", 7, 9] } } },
+    { $match: { 'category': inputCategory, 'date': inputDate, userId } }
+  ])
+  categories.forEach(category => categoryData[category.name] = category.icon)
 
-    const categoryDate = await Category.findOne({ name: sort }).lean()
-    const records = await Record.find({ userId, categoryId: categoryDate._id }).populate("categoryId").lean()
-    const data = records.map(record => {
-      const { _id, name, date, amount } = record
-      const formatDate = moment.utc(date).format("YYYY/MM/DD")
-      return {
-        _id,
-        name,
-        date: formatDate,
-        amount,
-        icon: record.categoryId.icon
+  async function getFilterData() {
+    try {
+      if (!filteredData) return res.redirect('/')
+      const records = filteredData // home.js使用records
+      const date = []
+      const rawRecords = await Record.find().lean()
+      let totalAmount = 0
+      // 在篩選欄顯示 db 中有的月份
+      for (let i = 0; i < rawRecords.length; i++) {
+        if (!date.includes(rawRecords[i].date.slice(0, 7))) {
+          date.push(rawRecords[i].date.slice(0, 7))
+        }
       }
-    })
-    const totalAmount = data.reduce(((accumulator, item) => {
-      return accumulator + item.amount
-    }), 0)
-    res.render("sort", { records: data, sort, totalAmount })
-  } catch (err) {
-    console.log(err)
+      for (let i = 0; i < records.length; i++) {
+        records[i].category = categoryData[records[i].category]
+        totalAmount = totalAmount + records[i].amount
+      }
+
+      res.render('index', { records, categories, inputCategory, totalAmount, date, inputDate })
+    } catch (error) {
+      console.error(error)
+    }
   }
+  getFilterData()
 })
 
 // Create

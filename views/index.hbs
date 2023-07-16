@@ -1,50 +1,77 @@
-<div class="container index-container">
-  <form action="/records/sort" id="sort-form" method="GET">
-    <select class="form-select" aria-label="Default select example" name="sort" onchange="this.form.submit()">
-      <option selected disabled value="">請選擇類別</option>
-      <option value="家居物業">家居物業</option>
-      <option value="交通出行">交通出行</option>
-      <option value="休閒娛樂">休閒娛樂</option>
-      <option value="餐飲食品">餐飲食品</option>
-      <option value="其他">其他</option>
-    </select>
-  </form>
+<div class="row mt-2">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body border-0">
+      <div class="row text-center">
+        <div class="col-9 my-3">
+          <form action="/" method="POST">
+            <select class="form-select" aria-label="Default select example" id="categoryName" name="categoryName"
+              onchange="this.form.submit()">
+              <option value="">類別</option>
+              {{#each categories}}
+              {{#if this.isChoosed}}
+              <option selected value="{{this.name}}">{{this.name}}</option>
+              {{else}}
+              <option value="{{this.name}}">{{this.name}}</option>
+              {{/if}}
+              {{/each}}
+            </select>
+          </form>
+        </div>
+      </div>
 
-  <div class="total-div">
-    <div id="total-text"><span>總金額:</span></div>
-    <div id="totalAmount">{{totalAmount}}</div>
+      <ul class="list-group">
+        {{!-- 總金額 --}}
+        <div class="row">
+          <div class="col-9">
+            <li class="list-group-item py-0 border-0">
+              <div class="d-flex flex-row justify-content-between ">
+                <p>總金額：</p>
+                <h1 id="totalAmount" class="text-warning">{{totalAmount}}</h1>
+              </div>
+            </li>
+          </div>
+        </div>
+
+        {{!-- 細項 --}}
+        {{#each records}}
+        <div class="row">
+          <div class="col-9">
+            {{#if this.isEven}}
+            <li class="list-group-item list-group-item-dark">
+              {{else}}
+            <li class="list-group-item list-group-item">
+              {{/if}}
+
+              <div class="d-flex flex-row align-items-center justify-content-between">
+                <div class="d-flex flex-row align-items-center">
+                  <i class="{{this.categoryId.icon}}" style="color: #2977ff;"></i>
+                  <div class="d-flex flex-column px-3 my-1">
+                    <span id="itemName" class="h6 my-0">{{this.name}}</span>
+                    <span id="itemDate" class="h6 my-0">{{this.date}}</span>
+                  </div>
+                </div>
+                <div class="d-flex justify-content-end col-auto">
+                  <span id="itemPrice" class="fs-5">{{this.amount}}</span>
+                </div>
+              </div>
+            </li>
+          </div>
+
+          {{!-- 按鈕(EDIT + DELETE) --}}
+          <div class="col-auto d-flex flex-row align-items-center">
+            <form action="/expenses/{{this._id}}?_method=DELETE" method="POST">
+              <a href="/expenses/{{this._id}}" class="btn btn-outline-success btn-sm">修改</a>
+              <button type="submit" class="btn btn-outline-danger btn-sm"> 刪除</button>
+            </form>
+          </div>
+        </div>
+        {{/each}}
+      </ul>
+      
+      {{!-- 按鈕(CREATE) --}}
+      <div class="col-9 text-center my-4">
+        <a href="/expenses/new" class="btn btn-outline-primary">新增支出</a>
+      </div>
+    </div>
   </div>
-
-  <table>
-    {{#each records}}
-    <tr>
-      <td id="icon">
-        <i class="{{this.icon}}"></i>
-      </td>
-      <td id="name">{{this.name}}
-        <p id="date">{{this.date}}</p>
-      </td>
-      <td></td>
-      <td></td>
-      <td></td>
-      <td id="amount">{{this.amount}}</td>
-      <td></td>
-      <td class="button-td">
-        <a href="/records/edit/{{this._id}}" class="btn btn-success" id="edit-button">修改</a>
-      </td>
-      <td class="button-td">
-        <form action="/records/delete/{{this._id}}?_method=DELETE" method="POST" class="ms-3">
-          <button type="submit" class="btn btn-danger" id="delete">刪除</button>
-        </form>
-      </td>
-    </tr>
-    {{/each}}
-    <tr>
-      <td></td>
-      <td></td>
-      <td colspan="4">
-        <a class="btn btn-primary mt-5" href="/records/new" id="add-button">新增支出</a>
-      </td>
-    </tr>
-  </table>
 </div>
