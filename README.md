@@ -1,6 +1,6 @@
 # 家庭記帳本
 
-![Index page about Restaurant List](./public/image/home.png)
+![Index page about Restaurant List](./public/home.png)
 
 ## 介紹
 
@@ -25,7 +25,7 @@
    git clone https://github.com/chiangjou/expense_tracker.git
    ```
 
-3. 透過終端機進入資料夾 `restaurant_list_v.3`
+3. 透過終端機進入資料夾 `expense_tracker`
 
    ```bash
    cd expense_tracker
