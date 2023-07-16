@@ -11,11 +11,13 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config()
 }
 
+// 引用路由器
 const routes = require("./routes")
 
 const usePassport = require("./config/passport")
-require("./config/mongoose")
 
+// 連線 mongoose 
+require("./config/mongoose")
 const app = express()
 const PORT = process.env.PORT
 
