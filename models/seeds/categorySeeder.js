@@ -1,24 +1,16 @@
 const Category = require("../category")
-const { SEED_CATEGORY } = require("../seedsData")
 const db = require("../../config/mongoose")
+const seedCategory = require("./category.json")
 
-if (process.env.NODE_ENV !== "production") {
-  require("dotenv").config()
-}
-
-db.once("open", async () => {
-  try {
-    const Category = await Category.find().lean()
-
-    if (Category.length === 0) {
-      await Category.create(SEED_CATEGORY);
-      console.log("所有類別已創建完成。");
-    }
-    process.exit();
-  } catch (error) {
-    console.log(error);
-  }
-});
+db.once("open", () => {
+  Category
+    .create(seedCategory)
+    .then(() => {
+      console.log("Category seeder is done!")
+      process.exit()
+    })
+    .catch(error => console.error(error))
+})
 
 
 
