@@ -1,37 +1,42 @@
 <div class="row mt-5">
   <div class="col-md-6 m-auto">
-    <div class="card card-body">
+    <div class="card card-body text-dark bg-light">
+      <h3 class="text-center mt-2 mb-4">新增支出</h3>
+
       <form action="/records" method="POST">
-        <div class="mb-3 d-flex flex-row align-items-center">
 
-          <h6>*必填欄位</h6>
-          <h2 class="m-auto">請輸入你的支出</h2>
-        </div>
+        <div class="mb-4">
 
-        <div class="mb-3 input-group">
-          <label for="name" class="form-label">名稱*：</label>
-          <input type="text" class="form-control mx-3" id="name" name="name" required>
-        </div>
+          <div class="mb-3 input-group">
+            <p>類別 <span class="text-danger">*</span></p>
+            <select class="form-select mx-4" aria-label="Default select example" id="categoryName" name="categoryName">
+              <option selected>請選擇類別</option>
+              {{#each categories}}
+              <option value="{{this.name}}">{{this.name}}</option>
+              {{/each}}
+            </select>
+          </div>
 
-        <div class="mb-3 input-group">
-          <label for="date" class="form-label">日期*：</label>
-          <input type="date" class="form-control mx-3" id="date" name="date" required>
-        </div>
+          <div class="mb-3 input-group">
+            <label for="name" class="form-label">名稱 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control mx-4" id="name" name="name" placeholder="請輸入名稱 ..." required />
+          </div>
 
-        <div class="mb-3 input-group">
-          <p>類別*：</p>
-          <select class="form-select mx-3" aria-label="Default select example" id="categoryName" name="categoryName"
-            required>
-            <option value="" selected>類別</option>
-            {{#each categories}}
-            <option value="{{this.name}}">{{this.name}}</option>
-            {{/each}}
-          </select>
-        </div>
+          <div class="mb-3 input-group">
 
-        <div class="mb-4 input-group">
-          <label for="amount" class="form-label">金額*：</label>
-          <input type="number" class="form-control mx-3" id="amount" name="amount" required>
+            <label for="amount" class="form-label">金額 <span class="text-danger">*</span></label>
+            <input type="text" class="form-control mx-4" id="amount" name="amount" placeholder="請輸入金額 ..." required />
+          </div>
+
+          <div class="mb-4 input-group">
+            <label for="date" class="form-label">日期 <span class="text-danger">*</span></label>
+            <input type="date" class="form-control mx-4" id="date" name="date" required />
+          </div>
+
+          <div class="input-group">
+            <label for="note" class="form-label">備註 <span class="me-2"></span></label>
+            <textarea class="form-control mx-4" id="note" name="note"></textarea>
+          </div>
         </div>
 
         <div class="d-flex flex-row justify-content-center">
