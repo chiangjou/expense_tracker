@@ -6,6 +6,7 @@ if (process.env.NODE_ENV !== "production") {
 const bcrypt = require("bcryptjs")
 const Record = require("../record")
 const User = require("../user")
+const Category = require("../category")
 const db = require("../../config/mongoose")
 const seedRecord = require("./record.json")
 

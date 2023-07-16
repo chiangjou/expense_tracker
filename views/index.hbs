@@ -1,22 +1,22 @@
 <div class="row mt-2">
-  <div class="col-md-6 m-auto">
-    <div class="card card-body border-0">
-      <div class="row text-center">
-        <div class="col-9 my-3">
-          <form action="/" method="POST">
-            <select class="form-select" aria-label="Default select example" id="categoryName" name="categoryName"
-              onchange="this.form.submit()">
-              <option value="">類別</option>
-              {{#each categories}}
-              {{#if this.isChoosed}}
-              <option selected value="{{this.name}}">{{this.name}}</option>
-              {{else}}
-              <option value="{{this.name}}">{{this.name}}</option>
-              {{/if}}
-              {{/each}}
-            </select>
-          </form>
-        </div>
+  <div class="col-md-8 m-auto">
+
+    {{!-- 選擇類別 --}}
+    <div class="row">
+      <div class="col-9 my-3">
+        <form action="/" method="POST">
+          <select class="form-select" aria-label="Default select example" id="categoryName" name="categoryName"
+            onchange="this.form.submit()">
+            <option value="">類別</option>
+            {{#each categories}}
+            {{#if this.isChoosed}}
+            <option selected value="{{this.name}}">{{this.name}}</option>
+            {{else}}
+            <option value="{{this.name}}">{{this.name}}</option>
+            {{/if}}
+            {{/each}}
+          </select>
+        </form>
       </div>
 
       <ul class="list-group">
@@ -24,54 +24,53 @@
         <div class="row">
           <div class="col-9">
             <li class="list-group-item py-0 border-0">
-              <div class="d-flex flex-row justify-content-between ">
+              <div class="d-flex flex-row justify-content-between mt-3 mb-3">
                 <p>總金額：</p>
-                <h1 id="totalAmount" class="text-warning">{{totalAmount}}</h1>
+                <h1 id="totalAmount" class="text-warning">{{ totalAmount }}</h1>
               </div>
             </li>
           </div>
         </div>
-
-        {{!-- 細項 --}}
-        {{#each records}}
-        <div class="row">
-          <div class="col-9">
-            {{#if this.isEven}}
-            <li class="list-group-item list-group-item-dark">
-              {{else}}
-            <li class="list-group-item list-group-item">
-              {{/if}}
-
-              <div class="d-flex flex-row align-items-center justify-content-between">
-                <div class="d-flex flex-row align-items-center">
-                  <i class="{{this.categoryId.icon}}" style="color: #2977ff;"></i>
-                  <div class="d-flex flex-column px-3 my-1">
-                    <span id="itemName" class="h6 my-0">{{this.name}}</span>
-                    <span id="itemDate" class="h6 my-0">{{this.date}}</span>
+        
+        <ul class="list-group">
+          <div class="card card-body">
+            {{!-- 細項 --}}
+            {{#each records}}
+            <div class="row">
+              <div class="col-9">
+                <li class="list-group-item">
+                  <div class="d-flex flex-row align-items-center justify-content-between">
+                    <div class="d-flex flex-row align-items-center">
+                      <i class="{{this.categoryId.icon}}" style="color: #0D0D0D;"></i>
+                      <div class="d-flex flex-column px-3 my-1">
+                        <span id="itemName" class="h6 my-0 text-secondary">{{this.name}}</span>
+                        <span id="itemDate" class="h6 my-0">{{this.date}}</span>
+                      </div>
+                    </div>
+                    <div class="d-flex justify-content-end col-auto">
+                      <span id="itemPrice" class="fs-5">{{this.amount}}</span>
+                    </div>
                   </div>
-                </div>
-                <div class="d-flex justify-content-end col-auto">
-                  <span id="itemPrice" class="fs-5">{{this.amount}}</span>
-                </div>
+                </li>
               </div>
-            </li>
-          </div>
-
-          {{!-- 按鈕(EDIT + DELETE) --}}
-          <div class="col-auto d-flex flex-row align-items-center">
-            <form action="/records/{{this._id}}?_method=DELETE" method="POST">
-              <a href="/records/{{this._id}}" class="btn btn-outline-success btn-sm">修改</a>
-              <button type="submit" class="btn btn-outline-danger btn-sm"> 刪除</button>
-            </form>
-          </div>
+       
+        {{!-- 按鈕(EDIT + DELETE) --}}
+        <div class="col-auto d-flex flex-row align-items-center">
+          <form action="/records/{{this._id}}?_method=DELETE" method="POST">
+            <a href="/records/{{this._id}}" class="btn btn-outline-success btn-sm">修改</a>
+            <button type="submit" class="btn btn-outline-danger btn-sm"> 刪除</button>
+          </form>
         </div>
-        {{/each}}
-      </ul>
-
-      {{!-- 按鈕(CREATE) --}}
-      <div class="col-9 text-center my-4">
-        <a href="/records/new" class="btn btn-outline-primary">新增支出</a>
-      </div>
     </div>
+    {{/each}}
+    </ul>
+    </ul>
   </div>
+
+  {{!-- 按鈕(CREATE) --}}
+  <div class="col-9 text-center my-4">
+    <a href="/records/new" class="btn btn-outline-primary">新增支出</a>
+  </div>
+</div>
+</div>
 </div>

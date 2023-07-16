@@ -7,8 +7,8 @@ const recordSchema = new Schema({
     required: true
   },
   date: {
-    type: Date,
-    required: true
+    type: String,
+    required: true,
   },
   amount: {
     type: Number,

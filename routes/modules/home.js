@@ -5,27 +5,18 @@ const Category = require("../../models/category")
 
 router.get("/", (req, res) => {
   const userId = req.user._id
-  // 找出 Category 的資料，存到 categories
   Category.find()
     .lean()
     .then(categories => {
-      // 找出 Record 的資料，存到records
       Record.find({ userId })
         // populate 要以使用 Schema.Types.ObjectId 的欄位名稱
         .populate("categoryId")
         .lean()
-        .sort({ _id: "desc" })
+        .sort({ date: "desc" })
         .then(records => {
           let totalAmount = 0
 
-          records.map((record, index) => {
-            // 判斷該項為奇偶數，並新增屬性到 records
-            if (index % 2) {
-              records[index]["isEven"] = false
-            } else {
-              records[index]["isEven"] = true
-            }
-
+          records.map((record) => {
             // 計算花費總額
             totalAmount += record.amount
           })
@@ -44,7 +35,6 @@ router.post("/", (req, res) => {
     res.redirect("/")
     // 有選取類別 
   } else {
-    // 找出 Category 的資料，存到 categories
     Category.find()
       .lean()
       .then(categories => {
@@ -58,21 +48,14 @@ router.post("/", (req, res) => {
           }
         })
 
-        // 找出 Record 的資料，結果存到 records
         Record.find({ categoryId, userId })
-          // populate 要以使用 Schema.Types.ObjectId 的欄位名稱
           .populate("categoryId")
           .lean()
-          .sort({ _id: "desc" })
+          .sort({ date: "desc" })
           .then(records => {
             let totalAmount = 0
-            // 判斷該項為奇偶數, 並新增屬性到 records
-            records.map((record, index) => {
-              if (index % 2) {
-                records[index]["isEven"] = false
-              } else {
-                records[index]["isEven"] = true
-              }
+
+            records.map((record) => {
 
               // 計算花費總額
               totalAmount += record.amount
