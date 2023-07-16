@@ -17,6 +17,15 @@ const seedUser = {
 
 // 建立使用者資料
 db.once("open", () => {
+  // 從 Category 找測試資料的 category
+  seedRecord.map((item, index) => {
+    Category.findOne({ name: item.category })
+      .then(categories => {
+        seedRecord[index].category = categories._id
+      })
+  })
+
+  // 新增測試帳號到 User
   bcrypt
     .genSalt(10)
     .then(salt => bcrypt.hash(seedUser.password, salt))
@@ -24,24 +33,25 @@ db.once("open", () => {
       name: seedUser.name,
       email: seedUser.email,
       password: hash
-    }))
-    .then(user => {
-      const userId = user._id
-      return Promise.all(
-        Array.from({ length: seedRecord.length }, (_, i) =>
-          Record.create({
-            name: seedRecord[i].name,
-            category: seedRecord[i].category,
-            date: seedRecord[i].date,
-            amount: seedRecord[i].amount,
-            userId
+    })
+
+      // 將搭配的 category 和 userId 的資料新增到 Record
+      .then(user => {
+        Promise.all(
+          seedRecord.map(record => {
+            return Record.create({
+              name: record.name,
+              date: record.date,
+              amount: record.amount,
+              userId: user._id,
+              categoryId: record.category
+            })
           })
         )
-      )
-    })
-    .then(() => {
-      console.log("Record seeder is done!")
-      process.exit()
-    })
-    .catch((error) => console.error(error))
+          .then(() => {
+            console.log("Record Seeder is executed.")
+            process.exit()
+          })
+      })
+    )
 })

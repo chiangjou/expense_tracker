@@ -11,35 +11,38 @@ if (process.env.NODE_ENV !== "production") {
   require("dotenv").config()
 }
 
-// 引用路由器
+// 引用routes
 const routes = require("./routes")
-
+// 連線 Mongoose 
+require("./config/mongoose")
+// Passport: Authentication Middleware
 const usePassport = require("./config/passport")
 
-// 連線 mongoose 
-require("./config/mongoose")
 const app = express()
 const PORT = process.env.PORT
 
-// express-handlebars
+// Express-Handlebars
 app.engine("hbs", exphbs({ defaultLayout: "main", extname: ".hbs" }))
 app.set("view engine", "hbs")
+// app.use(express.static("public"))
 
-// express-session
+// Body-Parser: 取得 POST 的資料(req.body)
+app.use(bodyParser.urlencoded({ extended: true }))
+
+// Method-Override: RESTful API
+app.use(methodOverride("_method"))
+
+// Express-Session: 產生 Session
 app.use(session({
   secret: "ThisIsMySecret",
   resave: false,
   saveUninitialized: true
 }))
 
-// body-parser
-app.use(bodyParser.urlencoded({ extended: true }))
-
-app.use(express.static("public"))
-app.use(methodOverride("_method"))
-
+// 呼叫 usePassport
 usePassport(app)
 
+// Connect-Flash: 產生 Flash message
 app.use(flash())
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated()
@@ -49,6 +52,7 @@ app.use((req, res, next) => {
   next()
 })
 
+// 使用 routes
 app.use(routes)
 
 app.listen(PORT, () => {

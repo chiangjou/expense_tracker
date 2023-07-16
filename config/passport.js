@@ -9,8 +9,12 @@ module.exports = app => {
   app.use(passport.initialize())
   app.use(passport.session())
 
-  // 設定本地登入策略
-  passport.use(new LocalStrategy({ usernameField: "email", passReqToCallback: true }, (req, email, password, done) => {
+  // 設定 Local Strategy
+  passport.use(new LocalStrategy({ 
+    usernameField: "email", 
+    passReqToCallback: true   // 取得 Local Strategy 的 req
+  }, 
+  (req, email, password, done) => {
     User.findOne({ email })
       .then(user => {
         if (!user) {
@@ -26,7 +30,7 @@ module.exports = app => {
       .catch(error => done(error, false))
   }))
 
-  // 設定 Facebook 登入策略
+  // 設定 Facebook Strategy
   passport.use(
     new FacebookStrategy({
     clientID: process.env.FACEBOOK_ID,
@@ -35,6 +39,7 @@ module.exports = app => {
     profileFields: ["email", "displayName"]
   }, (accessToken, refreshToken, profile, done) => {
     const { name, email } = profile._json
+
     User.findOne({ email })
       .then(user => {
         if (user) return done(null, user)
@@ -51,6 +56,7 @@ module.exports = app => {
           .then(user => done(null, user))
           .catch(error => done(error, false))
       })
+      .catch(error => done(error, false))
   }))
   
   // 設定序列化與反序列化
@@ -61,6 +67,6 @@ module.exports = app => {
     User.findById(id)
       .lean()
       .then(user => done(null, user))
-      .catch(err => done(err, null))
+      .catch(error => done(error, null))
   })
 }
