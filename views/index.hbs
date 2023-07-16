@@ -31,13 +31,15 @@
             </li>
           </div>
         </div>
-        
-        <ul class="list-group">
-          <div class="card card-body">
-            {{!-- 細項 --}}
-            {{#each records}}
-            <div class="row">
-              <div class="col-9">
+
+
+        <div class="card card-body">
+
+          {{!-- 細項 --}}
+          {{#each records}}
+          <div class="row">
+            <div class="col-9">
+              <ul class="list-group list-group-flush">
                 <li class="list-group-item">
                   <div class="d-flex flex-row align-items-center justify-content-between">
                     <div class="d-flex flex-row align-items-center">
@@ -52,25 +54,28 @@
                     </div>
                   </div>
                 </li>
-              </div>
-       
-        {{!-- 按鈕(EDIT + DELETE) --}}
-        <div class="col-auto d-flex flex-row align-items-center">
-          <form action="/records/{{this._id}}?_method=DELETE" method="POST">
-            <a href="/records/{{this._id}}" class="btn btn-outline-success btn-sm">修改</a>
-            <button type="submit" class="btn btn-outline-danger btn-sm"> 刪除</button>
-          </form>
-        </div>
-    </div>
-    {{/each}}
-    </ul>
-    </ul>
-  </div>
+              </ul>
+            </div>
 
-  {{!-- 按鈕(CREATE) --}}
-  <div class="col-9 text-center my-4">
-    <a href="/records/new" class="btn btn-outline-primary">新增支出</a>
+            {{!-- button --}}
+            <div class="col-auto d-flex flex-row align-items-center">
+              <form action="/records/{{this._id}}?_method=DELETE" method="POST">
+                <a href="/records/{{this._id}}" class="btn btn-outline-success btn-sm">修改</a>
+                <button type="submit" class="btn btn-outline-danger btn-sm"> 刪除</button>
+              </form>
+            </div>
+
+          </div>
+          {{/each}}
+
+        </div>
+      </ul>
+    </div>
+
+    {{!-- button --}}
+    <div class="col-9 text-center my-4">
+      <a href="/records/new" class="btn btn-outline-primary">新增支出</a>
+    </div>
   </div>
-</div>
 </div>
 </div>
