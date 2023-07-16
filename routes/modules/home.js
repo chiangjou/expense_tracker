@@ -1,36 +1,35 @@
 const express = require("express")
 const router = express.Router()
+
 const Record = require("../../models/record")
-const moment = require("moment")
+const Category = require("../../models/category")
 
 router.get("/", async (req, res) => {
-  const userId = req.user._id
+  const categories = await Category.find().lesn()
+  const categoryData = {}
+  categories.forEach(category => categoryData[category.name] = category.icon)
 
-  try {
-    const records = await Record.find({ userId }).populate("categoryId").lean()
-    const data = records.map(record => {
-      const { _id, name, date, amount } = record
+  async function getAllData() {
+    const userId = req.user._id
+    const records = await Record.find({ userId }).lean()
+    try {
+      let totalAmount = 0
+      const date = []
 
-      // 日期格式轉換
-      const formatDate = moment.utc(date).format("YYYY/MM/DD")
-      return {
-        _id,
-        name,
-        date: formatDate,
-        amount,
-        icon: record.categoryId.icon
+      for (let i = 0; i < records.length; i++) {
+        if (!date.includes(records[i].date.slice(0, 7))){
+          date.push(records[i].date.slice(0, 7))
+        }
+        records[i].category = categoryData[records[i].category]
+        totalAmount = totalAmount + records[i].amount
       }
-    })
 
-    // 計算總金額
-    const totalAmount = data.reduce(((accumulator, item) => {
-      return accumulator + item.amount
-    }), 0)
-
-    res.render("index", { records: data, totalAmount })
-  } catch (error) {
-    console.log(error)
+      res.render("index", { records, categories, totalAmount, date })
+    } catch (error) {
+      console.log(error)
+    }
   }
+  getAllData()
 })
 
 module.exports = router
