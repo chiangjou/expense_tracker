@@ -1,64 +1,44 @@
-<div class="new-container">
-  <form action="/records/new" method="POST" id="new-form" class="need-validate-form" novalidate>
-    <table>
-      <thead>
-        <tr>
-          <th colspan="2">
-            <h2>請新增你的支出</h2>
-          </th>
-        </tr>
-        <tr>
-          <td>*必填欄位</td>
-        </tr>
-      </thead>
-      <tbody>
+<div class="row mt-5">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <form action="/records" method="POST">
+        <div class="mb-3 d-flex flex-row align-items-center">
 
-        <tr class="mt-3">
-          <td>
-            <label for="name" class="form-label">名稱* :</label>
-          </td>
-          <td>
-            <input type="text" id="name" name="name" class="form-control" required>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label for="date" class="form-label">日期* :</label>
-          </td>
-          <td>
-            <input type="date" id="date" name="date" class="form-control" required>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label for="category" class="form-label">類別* :</label>
-          </td>
-          <td>
-            <select class="form-select" aria-label="Default select example" name="category" id="category" required>
-              <option selected disabled value="">請選擇類別</option>
-              <option value="家居物業">家居物業</option>
-              <option value="交通出行">交通出行</option>
-              <option value="休閒娛樂">休閒娛樂</option>
-              <option value="餐飲食品">餐飲食品</option>
-              <option value="其他">其他</option>
-            </select>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <label for="amount" class="form-label">金額* :</label>
-          </td>
-          <td>
-            <input type="text" id="amount" name="amount" class="form-control" required>
-          </td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>
-            <button type="submit" class="btn btn-primary btn-block" id="new-button">新增支出</button>
-          </td>
-        </tr>
-      </tbody>
-    </table>
-  </form>
+          <h6>*必填欄位</h6>
+          <h2 class="m-auto">請輸入你的支出</h2>
+        </div>
+
+        <div class="mb-3 input-group">
+          <label for="name" class="form-label">名稱*：</label>
+          <input type="text" class="form-control mx-3" id="name" name="name" required>
+        </div>
+
+        <div class="mb-3 input-group">
+          <label for="date" class="form-label">日期*：</label>
+          <input type="date" class="form-control mx-3" id="date" name="date" required>
+        </div>
+
+        <div class="mb-3 input-group">
+          <p>類別*：</p>
+          <select class="form-select mx-3" aria-label="Default select example" id="categoryName" name="categoryName"
+            required>
+            <option value="" selected>類別</option>
+            {{#each categories}}
+            <option value="{{this.name}}">{{this.name}}</option>
+            {{/each}}
+          </select>
+        </div>
+
+        <div class="mb-4 input-group">
+          <label for="amount" class="form-label">金額*：</label>
+          <input type="number" class="form-control mx-3" id="amount" name="amount" required>
+        </div>
+
+        <div class="d-flex flex-row justify-content-center">
+          <button type="submit" class="btn btn-outline-primary ">新增支出</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
 </div>

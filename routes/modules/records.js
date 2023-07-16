@@ -3,140 +3,114 @@ const router = express.Router()
 const Record = require("../../models/record")
 const Category = require("../../models/category")
 
-// Filter
-router.get("/filter", async (req, res) => {
-  const categories = await Category.find().lean()
-
-  const inputCategory = req.query.category ? req.query.category : { $ne: '' }
-  const inputDate = req.query.month ? req.query.month : { $ne: '' }
-  const categoryData = {}
-  const userId = req.user._id
-  const filteredData = await Record.aggregate([
-    { $project: { userId: 1, name: 1, amount: 1, category: 1, date: { $substr: ["$date", 0, 7] }, day: { $substr: ["$date", 7, 9] } } },
-    { $match: { 'category': inputCategory, 'date': inputDate, userId } }
-  ])
-  categories.forEach(category => categoryData[category.name] = category.icon)
-
-  async function getFilterData() {
-    try {
-      if (!filteredData) return res.redirect('/')
-      const records = filteredData // home.js使用records
-      const date = []
-      const rawRecords = await Record.find().lean()
-      let totalAmount = 0
-      // 在篩選欄顯示 db 中有的月份
-      for (let i = 0; i < rawRecords.length; i++) {
-        if (!date.includes(rawRecords[i].date.slice(0, 7))) {
-          date.push(rawRecords[i].date.slice(0, 7))
-        }
-      }
-      for (let i = 0; i < records.length; i++) {
-        records[i].category = categoryData[records[i].category]
-        totalAmount = totalAmount + records[i].amount
-      }
-
-      res.render('index', { records, categories, inputCategory, totalAmount, date, inputDate })
-    } catch (error) {
-      console.error(error)
-    }
+// 函式庫
+const utilities = {
+  ConvertToSlashDate(dashDate) {
+    return new Date(dashDate).toLocaleDateString("zh-TW")
+  },
+  ConvertToDashDate(slashDate) {
+    // 1. 取出日期，並將年月日以字串格式分開存入陣列，並以padStart函數補0
+    const date = new Date(slashDate)
+    const dateArray = [date.getFullYear().toString(10), (date.getMonth() + 1).toString(10).padStart(2, "0"), date.getDate().toString(10).padStart(2, "0")]
+    // 2. 重組成字串
+    return dateArray.join("-")
   }
-  getFilterData()
-})
+}
 
 // Create
-router.get("/new", async (req, res) => {
-
-  try {
-    const Category = await Category.find().lean()
-    if (Category.length === 0) {
-      await Category.create(SEED_CATEGORY)
-      console.log("所有類別已創建完成。")
-    }
-  } catch (error) {
-    console.log(error)
-  }
-  res.render("new")
-})
-
-router.post("/new", async (req, res) => {
-  const userId = req.user._id
-  console.log(req.user)
-  const { name, date, category, amount } = req.body
-
-  const categoryData = await Category.findOne({ name: category }).lean()
-  try {
-    await Record.create({
-      name,
-      date,
-      amount,
-      userId,
-      categoryId: categoryData._id
-    })
-    res.redirect("/")
-  } catch (error) {
-    console.log(error)
-  }
-})
-
-// Read
-router.get("/:id", (req, res) => {
-  const userId = req.user._id
-  const _id = req.params.id
-
-  return Record.findOne({ _id, userId })
+router.get("/new", (req, res) => {
+  // 找出 Category 的資料，結果存到 categories
+  Category.find()
     .lean()
-    .then((record) => res.render("detail", { record }))
+    .then(categories => {
+      res.render("new", { categories })
+    })
+})
+
+router.post("/", (req, res) => {
+  const userId = req.user._id
+  const { name, date, categoryName, amount } = req.body
+  
+  // 將日期從 YYYY-MM-DD 轉成 YYYY/MM/DD
+  let slashDate = utilities.ConvertToSlashDate(date)
+
+  Category.findOne({ name: categoryName })
+    .lean()
+    .then(category => {
+      // 從 Category 取得 categoryId，再新增資料
+      let categoryId = category._id
+
+      Record.create({
+        name,
+        date: slashDate,
+        amount,
+        userId,
+        categoryId
+      })
+    })
+    .then(() => res.redirect("/"))
     .catch(error => console.log(error))
 })
 
 // Update
-router.get("/:id/edit", async (req, res) => {
+router.get("/:id", (req, res) => {
   const userId = req.user._id
-  const _id = req.params._id
+  const _id = req.params.id
 
-  try {
-    const record = await Record.findOne({ _id, userId }).populate("categoryId").lean()
-    const formatDate = moment.utc(record.date).format("YYYY-MM-DD")
+  Category.find()
+    .lean()
+    .then(categories => {
+      Record.findOne({ _id, userId })
+        .populate("categoryId")
+        .lean()
+        .then(record => {
+          // 將日期從 YYYY-MM-DD
+          dashDate = utilities.ConvertToDashDate(record.date)
 
-    res.render("edit", { record, formatDate })
-  } catch (error) {
-    console.log(error)
-  }
+          categories.map((category, index) => {
+            if (category.name === record.categoryId.name) {
+              categories[index]["isChoosed"] = true
+            }
+          })
+          res.render("edit", { categories, record, dashDate })
+        })
+        .catch(error => console.log(error))
+    })
+    .catch(error => console.log(error))
 })
 
-router.put("/:id/edit", async (req, res) => {
+router.put("/:id", (req, res) => {
   const userId = req.user._id
-  const _id = req.params._id
-  const { name, date, category, amount } = req.body
-  
-  try {
-    const categoryData = await Category.findOne({ name: category }).lean()
-    const record = {
-      name,
-      date,
-      amount,
-      userId,
-      categoryId: categoryData._id
-    }
+  const _id = req.params.id
+  const { name, date, categoryName, amount } = req.body
+  let slashDate = utilities.ConvertToSlashDate(date)
 
-    await Record.updateOne({ _id, userId }, { $set: record })
-    res.redirect("/")
-  } catch (error) {
-    console.log(error)
-  }
+  Category.findOne({ name: categoryName })
+    .then(category => {
+      Record.findOne({ _id, userId })
+        .then(record => {
+          record.name = name
+          record.date = slashDate
+          record.amount = amount
+          record.categoryId = category._id
+
+          return record.save()
+        })
+        .then(() => res.redirect("/"))
+        .catch(error => console.log(error))
+    })
+    .catch(error => console.log(error))
 })
 
 // Delete
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", (req, res) => {
   const userId = req.user._id
-  const _id = req.params._id
-
-  try {
-    await Record.findByIdAndDelete({ _id, userId })
-    res.redirect("/")
-  } catch (error) {
-    console.log(error)
-  }
+  const _id = req.params.id
+  
+  Record.findOne({ _id, userId })
+    .then(record => record.remove())
+    .then(() => res.redirect("/"))
+    .catch(error => console.log(error))
 })
 
 module.exports = router
