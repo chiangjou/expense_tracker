@@ -5,14 +5,14 @@
     <div class="row">
       <div class="col-9 my-3">
         <form action="/" method="POST">
-          <select class="form-select" aria-label="Default select example" id="categoryName" name="categoryName"
+          <select class="form-select" aria-label="Default select example" id="categoryId" name="categoryId"
             onchange="this.form.submit()">
             <option value="">類別</option>
             {{#each categories}}
             {{#if this.isChoosed}}
-            <option selected value="{{this.name}}">{{this.name}}</option>
+            <option selected value="{{this._id}}">{{this.name}}</option>
             {{else}}
-            <option value="{{this.name}}">{{this.name}}</option>
+            <option value="{{this._id}}">{{this.name}}</option>
             {{/if}}
             {{/each}}
           </select>

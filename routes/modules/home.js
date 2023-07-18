@@ -2,6 +2,7 @@ const express = require("express")
 const router = express.Router()
 const Record = require("../../models/record")
 const Category = require("../../models/category")
+const category = require("../../models/category")
 
 router.get("/", (req, res) => {
   const userId = req.user._id
@@ -25,48 +26,80 @@ router.get("/", (req, res) => {
     })
 })
 
+
 router.post("/", (req, res) => {
-  // 取出 Select Menu 的值
-  const { categoryName } = req.body
   const userId = req.user._id
+  const categoryID = req.body.categoryId
 
-  // 若沒有選取類別，跳轉回首頁
-  if (!categoryName) {
-    res.redirect("/")
-    // 有選取類別 
-  } else {
-    Category.find()
-      .lean()
-      .then(categories => {
-        // 將 Select Menu 的 categoryName 給categoryId
-        let categoryId = ""
+  Record.find({ userId, categoryId: categoryID })
+    .populate("categoryId")
+    .lean()
+    .sort({ date: "desc" })
+    .then((records) => {
+      let totalAmount = 0;
 
-        categories.forEach(category => {
-          if (category.name === categoryName) {
-            categoryId = category._id
-            category["isChoosed"] = true
-          }
-        })
-
-        Record.find({ categoryId, userId })
-          .populate("categoryId")
-          .lean()
-          .sort({ date: "desc" })
-          .then(records => {
-            let totalAmount = 0
-
-            records.map((record) => {
-
-              // 計算花費總額
-              totalAmount += record.amount
-            })
-           
-            res.render("index", { categories, records, totalAmount, categoryName })
-          })
-          .catch(error => console.log(error))
+      records.forEach((record) => {
+        totalAmount += record.amount
+        
+        if (record.categoryId._id.toString() === categoryID) {
+          record.categoryId["isChoosed"] = true
+        } else {
+          record.categoryId["isChoosed"] = false
+        }
       })
-      .catch(error => console.log(error))
-  }
-})
+
+      res.render("index", { records, totalAmount })
+    })
+    .catch((error) => {console.error(error)})
+});
+
+
+// router.post("/", (req, res) => {
+//   const userId = req.user._id
+//   const categoryId = req.body.category
+
+//   Record.find({ userId, categoryId })
+//     .populate("categoryId")
+//     .lean()
+//     .sort({ date: "desc" })
+//     .then((records) => {
+//       let totalAmount = 0
+
+//       for (const record of records) {
+//         totalAmount += record.amount
+
+//         if (record.categoryId._id.equals(categoryId)) {
+//           record.categoryId["isChoosed"] = true
+//         } else {
+//           record.categoryId["isChoosed"] = false
+//         }
+//       }
+//       res.render("index", { records, categories: records.map(r => r.categoryId), totalAmount })
+//     })
+    
+// })
+
+// router.post("/", (req, res) => {
+//   const userId = req.user._id
+//   const { categoryID } = req.body
+
+//   Record.find({ categoryID, userId })
+//     .populate("categoryId")
+//     .lean()
+//     .sort({ date: "desc" })
+//     .then(([records, categories]) => {
+//       if (category.name === category._id) {
+//         categoryID = category._id
+//         category["isChoosed"] =true
+//       }
+
+//       let totalAmount = 0
+//       records.forEach((record) => {
+//         totalAmount += record.amount
+//       })
+//       res.render("index", { records, categories, totalAmount })
+//     })
+//     .catch(error => console.log(error))
+// })
 
 module.exports = router
