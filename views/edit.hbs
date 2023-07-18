@@ -23,12 +23,12 @@
 
           <div class="mb-3 input-group">
             <label for="name" class="form-label">名稱 <span class="text-danger">*</span></label>
-            <input type="text" class="form-control mx-4" id="name" name="name" value="{{record.name}}" required />
+            <input type="text" class="form-control mx-4" id="name" name="name" value="{{record.name}}" maxlength="10" required />
           </div>
 
           <div class="mb-3 input-group">
             <label for="amount" class="form-label">金額 <span class="text-danger">*</span></label>
-            <input type="text" class="form-control mx-4" id="amount" name="amount" value="{{record.amount}}" required />
+            <input type="number" class="form-control mx-4" id="amount" name="amount" value="{{record.amount}}" min="0" max="999999999999" required />
           </div>
 
           <div class="mb-4 input-group">
