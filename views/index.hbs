@@ -10,9 +10,9 @@
             <option value="">類別</option>
             {{#each categories}}
             {{#if this.isChoosed}}
-            <option selected value="{{this._id}}">{{this.name}}</option>
+            <option selected value="{{this.name}}">{{this.name}}</option>
             {{else}}
-            <option value="{{this._id}}">{{this.name}}</option>
+            <option value="{{this.name}}">{{this.name}}</option>
             {{/if}}
             {{/each}}
           </select>
