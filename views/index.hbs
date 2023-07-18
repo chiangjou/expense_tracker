@@ -61,7 +61,7 @@
             <div class="col-auto d-flex flex-row align-items-center">
               <form action="/records/{{this._id}}?_method=DELETE" method="POST">
                 <a href="/records/{{this._id}}" class="btn btn-outline-success btn-sm">修改</a>
-                <button type="submit" class="btn btn-outline-danger btn-sm"> 刪除</button>
+                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="alertMessage()"> 刪除</button>
               </form>
             </div>
             </a>
@@ -79,3 +79,9 @@
   </div>
 </div>
 </div>
+
+<script>
+  function alertMessage() {
+    alert("確定要刪除嗎？")
+  }
+</script>
